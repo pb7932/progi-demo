@@ -29,13 +29,7 @@ public class DjelatnikService {
     }
 
     public Djelatnik getDjelatnikById(Long id) {
-        Optional<Djelatnik> djelatnik = this.djelatnikDAO.getDjelatnikById(id);
-
-        if(djelatnik.isPresent()) {
-            return (Djelatnik) djelatnik.get();
-        } else {
-            return  null;
-        }
+        return this.djelatnikDAO.getDjelatnikById(id);
     }
 
     public int saveDjelatnik(Djelatnik djelatnik) {

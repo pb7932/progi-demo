@@ -7,9 +7,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Radi operacije s tablicom djelatnici nad bazom.
@@ -51,16 +49,17 @@ public class DjelatnikDAO {
      * @param id id prema kojem se trazi djelatnik
      * @return objekt djelatnika koji se pronade, null ako ne postoji takav djelatnik
      */
-    public Optional<Djelatnik> getDjelatnikById(Long id) {
+    public Djelatnik getDjelatnikById(Long id) {
         try {
-            String sql = "SELECT * FROM djelatnici "  +
+            String sql = "SELECT * FROM djelatnici " +
                          "WHERE id = :id";
 
-            Query query = entityManager.createNativeQuery(sql);
+            //obavezno staviti ovaj Djelatnik.class jer inace spring boot ne zna kak map-ati column iz baze
+            // i properti objekta da se napravi objekta tipa Djelatnik
+            Query query = entityManager.createNativeQuery(sql, Djelatnik.class);
             query.setParameter("id", id);
 
-            List<Djelatnik> djelatnici = query.getResultList();
-            return (Optional<Djelatnik>) djelatnici.stream().findFirst();
+            return (Djelatnik) query.getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
